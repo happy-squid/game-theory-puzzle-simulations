@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Coin Toss Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="number"] {
+            padding: 5px;
+            margin: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .results-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .results-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coin Toss Simulation</h1>
+        <div>
+            <label for="tosses">Number of Coin Tosses per Simulation:</label>
+            <input type="number" id="tosses" min="1" value="100" onkeypress="handleKeyPress(event)">
+            <button onclick="runSimulation()">Run Simulation</button>
+        </div>
+        <div id="result">
+            <div id="results-section" class="results-section" style="display: none;">
+                <h2>Simulation Results</h2>
+                <div id="results-content"></div>
+            </div>
+            <img id="plot1" style="display: none;">
+            <img id="plot2" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                runSimulation();
+            }
+        }
+
+        async function runSimulation() {
+            const tosses = document.getElementById('tosses').value;
+            const plot1 = document.getElementById('plot1');
+            const plot2 = document.getElementById('plot2');
+            const resultsSection = document.getElementById('results-section');
+            const resultsContent = document.getElementById('results-content');
+            
+            try {
+                // Get results data
+                const resultsResponse = await fetch(`http://localhost:8000/results?n=${tosses}`);
+                const results = await resultsResponse.json();
+                
+                // Display results
+                resultsContent.innerHTML = `
+                    <p><strong>Number of Simulations:</strong> 100</p>
+                    <p><strong>Tosses per Simulation:</strong> ${tosses}</p>
+                    <p><strong>Equal Heads/Tails Probability:</strong> ${results.equalProbability}%</p>
+                    <table class="results-table">
+                        <tr>
+                            <th>Simulation</th>
+                            <th>Heads</th>
+                            <th>Tails</th>
+                            <th>Heads Deviation</th>
+                            <th>Tails Deviation</th>
+                        </tr>
+                        ${results.simulations.slice(0, 5).map(sim => `
+                            <tr>
+                                <td>${sim.simulation}</td>
+                                <td>${sim.heads}</td>
+                                <td>${sim.tails}</td>
+                                <td>${sim.headsDeviation}</td>
+                                <td>${sim.tailsDeviation}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                    <p><em>Showing first 5 simulations...</em></p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <img id="plot1" style="max-width: 100%; margin-bottom: 20px;">
+                        <img id="plot2" style="max-width: 100%; margin-bottom: 20px;">
+                    </div>
+                `;
+                resultsSection.style.display = 'block';
+
+                // Get and display plots
+                const response = await fetch(`http://localhost:8000/toss?n=${tosses}`);
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                document.getElementById('plot1').src = imageUrl;
+                
+                const response2 = await fetch(`http://localhost:8000/probability?n=${tosses}`);
+                const blob2 = await response2.blob();
+                const imageUrl2 = URL.createObjectURL(blob2);
+                document.getElementById('plot2').src = imageUrl2;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error running simulation. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html> 
