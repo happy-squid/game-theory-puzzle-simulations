@@ -1,0 +1,8 @@
+# R specific
+.Rhistory
+.RData
+.Rproj.user/
+
+# System specific
+.DS_Store
+Thumbs.db 
