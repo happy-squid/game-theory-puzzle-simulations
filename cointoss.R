@@ -1,5 +1,8 @@
 # 🪙 COIN FLIP EXPERIMENT - Understanding Probability & Deviation
 
+# library(plumber)
+# plumber::plumb("cointoss_api.R")$run(port=8000)
+
 library(ggplot2)
 library(plumber)
 

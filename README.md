@@ -3,8 +3,11 @@
 A web interface for simulating coin tosses with statistical analysis and visualization.
 
 ## Project Structure
-- `index.html` - The web interface for inputting simulation parameters and displaying results
-- `cointoss_api.R` - R API server using Plumber to handle simulation requests
+- `homepage.html` - The main landing page with simulation options
+- `cointoss.html` - The web interface for coin toss simulation
+- `birthday.html` - The web interface for birthday paradox simulation
+- `cointoss_api.R` - R API server for coin toss simulation
+- `birthday_api.R` - R API server for birthday paradox simulation
 - `cointoss.R` - Original coin toss simulation script
 
 ## Prerequisites
@@ -26,12 +29,12 @@ install.packages(c("plumber", "ggplot2", "jsonlite"))
 
 ## Usage
 
-1. Start the R server:
-library(plumber)
-pr <- plumber::plumb("cointoss_api.R")
-pr$run(port=8000)
+1. Start the R servers:
+```R
+source("start_servers.R")
+```
 
-2. Open `index.html` in your web browser
+2. Open `homepage.html` in your web browser
 
 ## Features
 

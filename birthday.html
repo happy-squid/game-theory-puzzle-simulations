@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Birthday Paradox Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        input[type="number"] {
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .results-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #555;
+        }
+        .plot-container {
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .plot-container img {
+            max-width: 100%;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='homepage.html'">← Home</button>
+    <div class="container">
+        <h1>Birthday Paradox Simulation</h1>
+        <div class="input-group">
+            <label for="month">Birth Month (1-12):</label>
+            <input type="number" id="month" min="1" max="12" value="1">
+        </div>
+        <div class="input-group">
+            <label for="day">Birth Day (1-31):</label>
+            <input type="number" id="day" min="1" max="31" value="1">
+        </div>
+        <div class="input-group">
+            <label for="people">Number of People in Room:</label>
+            <input type="number" id="people" min="1" value="23">
+        </div>
+        <div class="input-group">
+            <label for="simulations">Number of Simulations:</label>
+            <input type="number" id="simulations" min="1" value="1000">
+        </div>
+        <button onclick="runSimulation()">Run Simulation</button>
+        <div id="result">
+            <div id="results-section" class="results-section" style="display: none;">
+                <h2>Simulation Results</h2>
+                <div id="results-content"></div>
+                <div class="plot-container">
+                    <img id="plot" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runSimulation() {
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
+            const people = document.getElementById('people').value;
+            const simulations = document.getElementById('simulations').value;
+            const plotImg = document.getElementById('plot');
+            const resultsSection = document.getElementById('results-section');
+            const resultsContent = document.getElementById('results-content');
+            
+            try {
+                // First hide the previous plot if any
+                plotImg.style.display = 'none';
+                
+                // Get results
+                const resultsResponse = await fetch(`http://localhost:8001/birthday?month=${month}&day=${day}&people=${people}&simulations=${simulations}`);
+                if (!resultsResponse.ok) {
+                    throw new Error(`HTTP error! status: ${resultsResponse.status}`);
+                }
+                const results = await resultsResponse.json();
+                
+                // Display results
+                resultsContent.innerHTML = `
+                    <p><strong>Day of the Year:</strong> ${results.dayOfYear}</p>
+                    <p><strong>People in Room:</strong> ${people}</p>
+                    <p><strong>Number of Simulations:</strong> ${simulations}</p>
+                    <p><strong>Probability of Shared Birthday:</strong> ${results.probability}%</p>
+                    <p><strong>Most Common Birthday (DD/MM):</strong> ${results.mostCommonBirthday}</p>
+                `;
+                resultsSection.style.display = 'block';
+
+                // Get and display plot
+                const response = await fetch(`http://localhost:8001/birthday_plot?month=${month}&day=${day}&people=${people}&simulations=${simulations}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                // Set up image load handler
+                plotImg.onload = () => {
+                    plotImg.style.display = 'block';
+                };
+                plotImg.onerror = () => {
+                    throw new Error('Failed to load plot image');
+                };
+                plotImg.src = imageUrl;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error running simulation: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html> 
