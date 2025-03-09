@@ -3,8 +3,8 @@ let prizeLocation;
 let selectedDoor;
 let revealedDoor;
 let gamePhase = 'selection'; // 'selection', 'reveal', or 'final'
-const prizeImage = 'images/prize.jpg';
-const goatImage = 'images/goat.jpg';
+const prizeImage = './images/prize.jpg';
+const goatImage = './images/goat.jpg';
 
 // DOM Elements
 const doorsDiv = document.getElementById('doors');
@@ -27,7 +27,13 @@ function initGame() {
     for (let i = 0; i < 3; i++) {
         const door = document.createElement('div');
         door.className = 'door';
-        door.textContent = `${i + 1}`;
+        
+        // Add door number
+        const doorNumber = document.createElement('div');
+        doorNumber.className = 'door-number';
+        doorNumber.textContent = i + 1;
+        door.appendChild(doorNumber);
+        
         door.onclick = () => handleDoorClick(i);
         doorsDiv.appendChild(door);
     }
@@ -47,8 +53,12 @@ function handleDoorClick(doorNumber) {
         revealedDoor = availableDoors[Math.floor(Math.random() * availableDoors.length)];
         
         // Reveal the goat
-        doors[revealedDoor].classList.add('revealed');
-        doors[revealedDoor].innerHTML = `${revealedDoor + 1}<br><img src="${goatImage}" alt="Goat" style="width:100px;">`;
+        doors[revealedDoor].classList.add('open');
+        const revealedDoorImg = document.createElement('img');
+        revealedDoorImg.src = goatImage;
+        revealedDoorImg.alt = 'Goat';
+        revealedDoorImg.className = 'door-image';
+        doors[revealedDoor].appendChild(revealedDoorImg);
         
         gamePhase = 'final';
         messageDiv.innerHTML = 'Would you like to switch your choice?<br>Click a door to make your final decision.';
@@ -63,17 +73,31 @@ function handleDoorClick(doorNumber) {
             if (i === doorNumber) {
                 door.classList.add('final');
             }
-            if (i === prizeLocation) {
-                door.innerHTML = `${i + 1}<br><img src="${prizeImage}" alt="Prize" style="width:100px;">`;
-            } else if (i !== revealedDoor) {
-                door.innerHTML = `${i + 1}<br><img src="${goatImage}" alt="Goat" style="width:100px;">`;
+            door.classList.add('open');
+            
+            if (i !== revealedDoor) {
+                const img = document.createElement('img');
+                img.src = i === prizeLocation ? prizeImage : goatImage;
+                img.alt = i === prizeLocation ? 'Prize' : 'Goat';
+                img.className = 'door-image';
+                door.appendChild(img);
             }
         });
         
-        // Show result message
+        // Show result message with properly sized image
+        const resultImg = document.createElement('img');
+        resultImg.src = prizeImage;
+        resultImg.alt = 'Prize';
+        resultImg.style.width = '150px';
+        resultImg.style.height = '150px';
+        resultImg.style.objectFit = 'contain';
+        resultImg.style.margin = '20px auto';
+        resultImg.style.display = 'block';
+        
         messageDiv.innerHTML = wonPrize ? 
-            `Congratulations! You won the prize!<br><img src="${prizeImage}" alt="Prize" style="width:100px;">` :
-            `Sorry! The prize was behind door ${prizeLocation + 1}.<br><img src="${prizeImage}" alt="Prize" style="width:100px;">`;
+            'Congratulations! You won the prize!' :
+            `Sorry! The prize was behind door ${prizeLocation + 1}.`;
+        messageDiv.appendChild(resultImg);
         
         gamePhase = 'over';
     }

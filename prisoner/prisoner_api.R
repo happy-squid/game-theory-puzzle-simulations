@@ -105,23 +105,39 @@ function(choices) {
         
         # Create a data frame for visualization
         df <- data.frame(
+            Round = rep(1:rounds, 2),
             Player = rep(c("You", "Computer"), each = rounds),
             Choice = c(choices, computer_choices)
         )
         
-        # Plot choices and save in the same directory as this script
+        # Plot choices with improved styling
         p <- ggplot(df, aes(x = Player, fill = Choice)) +
-            geom_bar(position = "dodge") +
+            geom_bar(position = "dodge", width = 0.7) +
             theme_minimal() +
-            labs(title = "Distribution of Choices", x = "Player", y = "Count") +
-            scale_fill_manual(values = c("C" = "blue", "D" = "red")) +
+            labs(
+                title = "Distribution of Choices",
+                x = "Player",
+                y = "Count",
+                fill = "Choice"
+            ) +
+            scale_fill_manual(
+                values = c("C" = "#4CAF50", "D" = "#f44336"),
+                labels = c("C" = "Cooperate", "D" = "Defect")
+            ) +
             theme(
-                plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+                plot.title = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 20)),
                 axis.title = element_text(size = 12),
                 axis.text = element_text(size = 10),
                 legend.title = element_text(size = 12),
-                legend.text = element_text(size = 10)
-            )
+                legend.text = element_text(size = 10),
+                panel.grid.major = element_line(color = "#E0E0E0"),
+                panel.grid.minor = element_blank(),
+                legend.position = "bottom",
+                plot.margin = margin(20, 20, 20, 20),
+                plot.background = element_rect(fill = "white", color = NA),
+                panel.background = element_rect(fill = "white", color = NA)
+            ) +
+            coord_cartesian(clip = "off")
         
         # Save plot in the same directory as this script
         ggsave("plot.png", p, width = 8, height = 6)
@@ -155,31 +171,54 @@ function(choices) {
             stop("Invalid choices! Please use only 'C' for Cooperate or 'D' for Defect.")
         }
         
+        if (length(choices) != 5) {
+            stop("Please provide exactly 5 choices!")
+        }
+        
+        # Get computer's choices from previous rounds
         rounds <- length(choices)
-        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
+        computer_choices <- character(rounds)
+        
+        # Play each round and store computer's choices
+        for (i in 1:rounds) {
+            computer_choices[i] <- sample(c("C", "D"), 1)[[1]]
+        }
         
         # Create a data frame for visualization
         df <- data.frame(
+            Round = rep(1:rounds, 2),
             Player = rep(c("You", "Computer"), each = rounds),
             Choice = c(choices, computer_choices)
         )
         
-        # Plot choices and save in the same directory as this script
+        # Plot choices with improved styling
         p <- ggplot(df, aes(x = Player, fill = Choice)) +
-            geom_bar(position = "dodge") +
+            geom_bar(position = "dodge", width = 0.7) +
             theme_minimal() +
-            labs(title = "Distribution of Choices", x = "Player", y = "Count") +
-            scale_fill_manual(values = c("C" = "blue", "D" = "red")) +
+            labs(
+                title = "Distribution of Choices",
+                x = "Player",
+                y = "Count",
+                fill = "Choice"
+            ) +
+            scale_fill_manual(
+                values = c("C" = "#4CAF50", "D" = "#f44336"),
+                labels = c("C" = "Cooperate", "D" = "Defect")
+            ) +
             theme(
-                plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+                plot.title = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 20)),
                 axis.title = element_text(size = 12),
                 axis.text = element_text(size = 10),
                 legend.title = element_text(size = 12),
-                legend.text = element_text(size = 10)
-            )
-        
-        # Save plot in the same directory as this script
-        ggsave("plot.png", p, width = 8, height = 6)
+                legend.text = element_text(size = 10),
+                panel.grid.major = element_line(color = "#E0E0E0"),
+                panel.grid.minor = element_blank(),
+                legend.position = "bottom",
+                plot.margin = margin(20, 20, 20, 20),
+                plot.background = element_rect(fill = "white", color = NA),
+                panel.background = element_rect(fill = "white", color = NA)
+            ) +
+            coord_cartesian(clip = "off")
         
         print(p)
     }, error = function(e) {

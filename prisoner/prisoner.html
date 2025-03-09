@@ -201,24 +201,27 @@
 
         async function showMultipleResults() {
             try {
-                // Get final results including plot
-                const response = await fetch(`http://localhost:8003/multiple_rounds?choices=${multipleRoundChoices.join(',')}`);
-                if (!response.ok) {
-                    throw new Error('Failed to get final results');
+                // Get the plot from the API
+                const plotResponse = await fetch(`http://localhost:8003/choice_distribution_plot?choices=${multipleRoundChoices.join(',')}`);
+                if (!plotResponse.ok) {
+                    throw new Error('Failed to generate plot');
                 }
 
-                const data = await response.json();
+                // Convert the response to a blob
+                const blob = await plotResponse.blob();
+                const plotUrl = URL.createObjectURL(blob);
 
-                // Update the plot image with a timestamp to prevent caching
-                const plotImg = document.getElementById('distribution-plot');
-                plotImg.src = `plot.png?t=${new Date().getTime()}`;
-                plotImg.style.display = 'block';
+                // Display the plot
+                const plotImage = document.getElementById('distribution-plot');
+                plotImage.src = plotUrl;
+                plotImage.style.display = 'block';
 
                 // Scroll to final results section
                 scrollToSection('final-results-section');
+
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('plot-error').textContent = error.message;
+                document.getElementById('plot-error').textContent = 'Failed to generate plot: ' + error.message;
                 document.getElementById('plot-error').style.display = 'block';
             }
         }
