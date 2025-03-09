@@ -33,26 +33,17 @@ payoffs <- list(
 
 #* Play a single round of Prisoner's Dilemma
 #* @param choice Player's choice (C or D)
-#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer json
 #* @get /single_round
-function(choice, strategy = "random") {
+function(choice) {
     tryCatch({
         # Validate input
         if (is.null(choice) || !choice %in% c("C", "D")) {
             stop("Invalid choice! Please enter 'C' for Cooperate or 'D' for Defect.")
         }
         
-        if (!strategy %in% c("random", "rational")) {
-            stop("Invalid strategy! Please use 'random' or 'rational'.")
-        }
-        
-        # Computer decision logic
-        computer_choice <- if (strategy == "random") {
-            sample(c("C", "D"), 1)[[1]]  # Random choice
-        } else {
-            "D"  # Always defect strategy for rational play
-        }
+        # Computer makes a random choice
+        computer_choice <- sample(c("C", "D"), 1)[[1]]
         
         # Get the result from the payoff matrix
         result <- payoffs[[choice]][[computer_choice]]
@@ -70,10 +61,9 @@ function(choice, strategy = "random") {
 
 #* Play multiple rounds of Prisoner's Dilemma
 #* @param choices Array of player choices
-#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer json
 #* @get /multiple_rounds
-function(choices, strategy = "random") {
+function(choices) {
     tryCatch({
         if (is.null(choices)) {
             stop("No choices provided!")
@@ -90,16 +80,8 @@ function(choices, strategy = "random") {
             stop("Please provide exactly 5 choices!")
         }
         
-        if (!strategy %in% c("random", "rational")) {
-            stop("Invalid strategy! Please use 'random' or 'rational'.")
-        }
-        
         rounds <- length(choices)
-        computer_choices <- if (strategy == "random") {
-            sample(c("C", "D"), rounds, replace = TRUE)  # Random choices
-        } else {
-            rep("D", rounds)  # Always defect strategy for rational play
-        }
+        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
         
         player_scores <- numeric(rounds)
         computer_scores <- numeric(rounds)
@@ -125,10 +107,9 @@ function(choices, strategy = "random") {
 
 #* Generate choice distribution plot
 #* @param choices Array of player choices
-#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer png
 #* @get /choice_distribution_plot
-function(choices, strategy = "random") {
+function(choices) {
     tryCatch({
         if (is.null(choices)) {
             stop("No choices provided!")
@@ -140,16 +121,8 @@ function(choices, strategy = "random") {
             stop("Invalid choices! Please use only 'C' for Cooperate or 'D' for Defect.")
         }
         
-        if (!strategy %in% c("random", "rational")) {
-            stop("Invalid strategy! Please use 'random' or 'rational'.")
-        }
-        
         rounds <- length(choices)
-        computer_choices <- if (strategy == "random") {
-            sample(c("C", "D"), rounds, replace = TRUE)  # Random choices
-        } else {
-            rep("D", rounds)  # Always defect strategy for rational play
-        }
+        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
         
         # Create a data frame for visualization
         df <- data.frame(
@@ -157,7 +130,7 @@ function(choices, strategy = "random") {
             Choice = c(choices, computer_choices)
         )
         
-        # Plot choices using the same style as prisoner.R
+        # Plot choices and save in the same directory as this script
         p <- ggplot(df, aes(x = Player, fill = Choice)) +
             geom_bar(position = "dodge") +
             theme_minimal() +
@@ -171,12 +144,8 @@ function(choices, strategy = "random") {
                 legend.text = element_text(size = 10)
             )
         
-        # Get the directory of this script
-        script_dir <- dirname(sys.frame(1)$ofile)
-        plot_path <- file.path(script_dir, "plot.png")
-        
-        # Save plot in the prisoner directory
-        ggsave(plot_path, p, width = 8, height = 6)
+        # Save plot in the same directory as this script
+        ggsave("plot.png", p, width = 8, height = 6)
         
         print(p)
     }, error = function(e) {
