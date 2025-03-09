@@ -92,6 +92,29 @@ function(choices) {
             computer_scores[i] <- result[2]
         }
         
+        # Create a data frame for visualization
+        df <- data.frame(
+            Player = rep(c("You", "Computer"), each = rounds),
+            Choice = c(choices, computer_choices)
+        )
+        
+        # Plot choices and save in the same directory as this script
+        p <- ggplot(df, aes(x = Player, fill = Choice)) +
+            geom_bar(position = "dodge") +
+            theme_minimal() +
+            labs(title = "Distribution of Choices", x = "Player", y = "Count") +
+            scale_fill_manual(values = c("C" = "blue", "D" = "red")) +
+            theme(
+                plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+                axis.title = element_text(size = 12),
+                axis.text = element_text(size = 10),
+                legend.title = element_text(size = 12),
+                legend.text = element_text(size = 10)
+            )
+        
+        # Save plot in the same directory as this script
+        ggsave("plot.png", p, width = 8, height = 6)
+        
         list(
             playerChoices = choices,
             computerChoices = computer_choices,
