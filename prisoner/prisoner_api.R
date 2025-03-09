@@ -33,17 +33,26 @@ payoffs <- list(
 
 #* Play a single round of Prisoner's Dilemma
 #* @param choice Player's choice (C or D)
+#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer json
 #* @get /single_round
-function(choice) {
+function(choice, strategy = "random") {
     tryCatch({
         # Validate input
         if (is.null(choice) || !choice %in% c("C", "D")) {
             stop("Invalid choice! Please enter 'C' for Cooperate or 'D' for Defect.")
         }
         
-        # Computer makes a random choice
-        computer_choice <- sample(c("C", "D"), 1)[[1]]
+        if (!strategy %in% c("random", "rational")) {
+            stop("Invalid strategy! Please use 'random' or 'rational'.")
+        }
+        
+        # Computer decision logic
+        computer_choice <- if (strategy == "random") {
+            sample(c("C", "D"), 1)[[1]]  # Random choice
+        } else {
+            "D"  # Always defect strategy for rational play
+        }
         
         # Get the result from the payoff matrix
         result <- payoffs[[choice]][[computer_choice]]
@@ -61,9 +70,10 @@ function(choice) {
 
 #* Play multiple rounds of Prisoner's Dilemma
 #* @param choices Array of player choices
+#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer json
 #* @get /multiple_rounds
-function(choices) {
+function(choices, strategy = "random") {
     tryCatch({
         if (is.null(choices)) {
             stop("No choices provided!")
@@ -80,8 +90,16 @@ function(choices) {
             stop("Please provide exactly 5 choices!")
         }
         
+        if (!strategy %in% c("random", "rational")) {
+            stop("Invalid strategy! Please use 'random' or 'rational'.")
+        }
+        
         rounds <- length(choices)
-        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
+        computer_choices <- if (strategy == "random") {
+            sample(c("C", "D"), rounds, replace = TRUE)  # Random choices
+        } else {
+            rep("D", rounds)  # Always defect strategy for rational play
+        }
         
         player_scores <- numeric(rounds)
         computer_scores <- numeric(rounds)
@@ -107,9 +125,10 @@ function(choices) {
 
 #* Generate choice distribution plot
 #* @param choices Array of player choices
+#* @param strategy Computer's strategy (random or rational), defaults to random
 #* @serializer png
 #* @get /choice_distribution_plot
-function(choices) {
+function(choices, strategy = "random") {
     tryCatch({
         if (is.null(choices)) {
             stop("No choices provided!")
@@ -121,8 +140,16 @@ function(choices) {
             stop("Invalid choices! Please use only 'C' for Cooperate or 'D' for Defect.")
         }
         
+        if (!strategy %in% c("random", "rational")) {
+            stop("Invalid strategy! Please use 'random' or 'rational'.")
+        }
+        
         rounds <- length(choices)
-        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
+        computer_choices <- if (strategy == "random") {
+            sample(c("C", "D"), rounds, replace = TRUE)  # Random choices
+        } else {
+            rep("D", rounds)  # Always defect strategy for rational play
+        }
         
         # Create a data frame for visualization
         df <- data.frame(

@@ -421,6 +421,45 @@ input {
     background-color: #555;
 }
 
+.strategy-container {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.strategy-container h3 {
+    margin: 0 0 15px;
+    color: #2c3e50;
+    font-size: 1.2em;
+}
+
+.strategy-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.strategy-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.strategy-options label:hover {
+    background-color: #e9ecef;
+}
+
+.strategy-options input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .section-title {

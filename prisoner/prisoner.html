@@ -54,7 +54,20 @@
                 <button onclick="selectChoice('C')" class="choice-button cooperate">Cooperate (C)</button>
                 <button onclick="selectChoice('D')" class="choice-button defect">Defect (D)</button>
             </div>
-            <button id="show-results" onclick="playSingleRound()" class="run-button" disabled>Show Results</button>
+            <div class="strategy-container">
+                <h3>Computer Strategy</h3>
+                <div class="strategy-options">
+                    <label>
+                        <input type="radio" name="strategy" value="random" checked>
+                        Random (Computer makes random choices)
+                    </label>
+                    <label>
+                        <input type="radio" name="strategy" value="rational">
+                        Rational (Computer always defects)
+                    </label>
+                </div>
+            </div>
+            <button id="show-results" onclick="playSingleRound(currentChoice)" class="run-button" disabled>Show Results</button>
             <div id="single-round-error" class="error-message"></div>
         </div>
         <button class="scroll-arrow" onclick="scrollToSection('results-section')">↓</button>
@@ -152,7 +165,8 @@
 
             try {
                 document.getElementById('rounds-status').textContent = `Round ${currentRound} of 5`;
-                const response = await fetch(`http://localhost:8003/single_round?choice=${choice}`);
+                const strategy = document.querySelector('input[name="strategy"]:checked').value;
+                const response = await fetch(`http://localhost:8003/single_round?choice=${choice}&strategy=${strategy}`);
                 
                 let data;
                 try {
@@ -201,8 +215,9 @@
 
         async function showMultipleResults() {
             try {
+                const strategy = document.querySelector('input[name="strategy"]:checked').value;
                 // Update distribution plot
-                const plotResponse = await fetch(`http://localhost:8003/choice_distribution_plot?choices=${multipleRoundChoices.join(',')}`);
+                const plotResponse = await fetch(`http://localhost:8003/choice_distribution_plot?choices=${multipleRoundChoices.join(',')}&strategy=${strategy}`);
                 if (!plotResponse.ok) {
                     throw new Error('Failed to generate plot');
                 }
@@ -226,7 +241,8 @@
 
             try {
                 document.getElementById('single-round-results').innerHTML = 'Loading...';
-                const response = await fetch(`http://localhost:8003/single_round?choice=${currentChoice}`);
+                const strategy = document.querySelector('input[name="strategy"]:checked').value;
+                const response = await fetch(`http://localhost:8003/single_round?choice=${currentChoice}&strategy=${strategy}`);
                 
                 let data;
                 try {
@@ -255,41 +271,6 @@
                 document.getElementById('show-results').disabled = true;
 
                 scrollToSection('results-section');
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('single-round-error').textContent = error.message;
-                document.getElementById('single-round-error').style.display = 'block';
-                document.getElementById('single-round-results').innerHTML = '';
-            }
-        }
-
-        async function handleSingleRoundChoice(choice) {
-            // Remove selected class from all buttons
-            document.querySelectorAll('.choice-button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            // Add selected class to clicked button
-            const clickedButton = document.querySelector(`.choice-button.${choice.toLowerCase()}`);
-            clickedButton.classList.add('selected');
-
-            try {
-                const response = await fetch(`http://localhost:8003/single_round?choice=${choice}`);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const result = await response.json();
-
-                // Update results
-                document.getElementById('single-round-results').innerHTML = `
-                    <h3>Round Results:</h3>
-                    <p>Your choice: ${choice}</p>
-                    <p>Computer's choice: ${result.computerChoice}</p>
-                    <p>Your score: ${result.playerScore}</p>
-                    <p>Computer's score: ${result.computerScore}</p>
-                `;
-
-                // Show play again button
-                document.getElementById('show-results').disabled = false;
-                
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('single-round-error').textContent = error.message;
