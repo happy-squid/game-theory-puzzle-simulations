@@ -47,32 +47,64 @@ install.packages(c("plumber", "ggplot2", "jsonlite"))
    Rscript start_servers.R
    ```
 
-3. Open `homepage.html` in your web browser
+3. Open `homepage/index.html` in your web browser
 
 ## 📁 Project Structure
 
 ```
 .
-├── homepage.html          # Main landing page
-├── homepage.css          # Global styles
-├── card_images/          # Simulation card images
-├── start_servers.R       # Server startup script
+├── homepage/              # Landing page and assets
+│   ├── index.html        # Main landing page
+│   ├── style.css         # Homepage styles
+│   └── images/           # Simulation card images
 │
-├── cointoss/
-│   ├── cointoss.html    # Coin toss simulation interface
-│   └── cointoss_api.R   # Coin toss API endpoints
+├── cointoss/             # Coin toss simulation
+│   ├── cointoss.html     # Interface
+│   ├── cointoss.css      # Styles
+│   ├── cointoss.R        # Core logic
+│   ├── cointoss_api.R    # API endpoints
+│   └── start_cointoss_api.R  # Server startup
 │
-├── birthday/
-│   ├── birthday.html    # Birthday paradox interface
-│   └── birthday_api.R   # Birthday paradox API endpoints
+├── birthday/             # Birthday paradox simulation
+│   ├── birthday.html     # Interface
+│   ├── birthday.css      # Styles
+│   ├── birthday.R        # Core logic
+│   ├── birthday_api.R    # API endpoints
+│   └── start_birthday_api.R  # Server startup
 │
-├── prisoner/
-│   ├── prisoner.html    # Prisoner's dilemma interface
-│   └── prisoner_api.R   # Prisoner's dilemma API endpoints
+├── prisoner/             # Prisoner's dilemma simulation
+│   ├── prisoner.html     # Interface
+│   ├── prisoner.css      # Styles
+│   ├── prisoner.R        # Core logic
+│   ├── prisoner_api.R    # API endpoints
+│   └── start_prisoner_api.R  # Server startup
 │
-└── montyhall/
-    ├── index.html       # Monty Hall problem interface
-    └── style.css        # Monty Hall specific styles
+├── montyhall/            # Monty Hall problem simulation
+│   ├── index.html        # Interface
+│   ├── style.css         # Styles
+│   ├── script.js         # Game logic
+│   └── images/           # Game images
+│
+├── config/               # Configuration files
+│   └── api_config.R      # API settings
+│
+├── docs/                 # Documentation
+│   └── api.md           # API documentation
+│
+├── scripts/             # Utility scripts
+│   └── setup.R         # Development setup
+│
+├── tests/              # Test files
+│   └── test_simulations.R  # Simulation tests
+│
+├── utils/              # Helper functions
+│   └── helpers.R      # Common utilities
+│
+├── start_servers.R    # Main server startup script
+├── CODE_OF_CONDUCT.md # Project code of conduct
+├── CONTRIBUTING.md    # Contribution guidelines
+├── LICENSE           # Project license
+└── README.md        # This file
 ```
 
 ## 🔧 API Endpoints
@@ -100,8 +132,8 @@ Each simulation is designed to provide:
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
