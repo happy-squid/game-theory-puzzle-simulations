@@ -97,10 +97,6 @@ body {
     object-fit: cover;
 }
 
-.simulation-card[href="prisoner.html"] .card-image img {
-    object-position: center 30%;  /* Move image up to show more of the top portion */
-}
-
 .card-content {
     position: relative;
     padding: 25px 30px;
