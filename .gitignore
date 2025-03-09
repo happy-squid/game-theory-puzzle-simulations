@@ -2,7 +2,57 @@
 .Rhistory
 .RData
 .Rproj.user/
+*.Rproj
+.Rapp.history
+.RData
+.Ruserdata
+Rplots.pdf
 
 # System specific
 .DS_Store
-Thumbs.db 
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*.swo
+
+# IDE specific
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.Renviron
+
+# Build and dependency directories
+node_modules/
+dist/
+build/
+vendor/
+
+# Debug files
+*.debug
+debug.log
+npm-debug.log*
+
+# Generated files
+plot.png
+*.pdf
+*.html.png
+*.jpg.png
+
+# Backup files
+*~
+*.bak
+*.backup
