@@ -10,9 +10,9 @@ start_server <- function(api_file, port, name) {
 }
 
 # Start all servers
-start_server("cointoss_api.R", 8000, "Coin Toss")
-start_server("birthday_api.R", 8001, "Birthday Paradox")
-start_server("prisoner_api.R", 8003, "Prisoner's Dilemma")
+start_server("cointoss/cointoss_api.R", 8000, "Coin Toss")
+start_server("birthday/birthday_api.R", 8001, "Birthday Paradox")
+start_server("prisoner/prisoner_api.R", 8003, "Prisoner's Dilemma")
 
 cat("\nServers started successfully:")
 cat("\n- Coin Toss API running on port 8000")
