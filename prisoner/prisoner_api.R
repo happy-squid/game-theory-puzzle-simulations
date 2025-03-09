@@ -130,12 +130,12 @@ function(choices) {
             Choice = c(choices, computer_choices)
         )
         
-        # Plot choices and save in the same directory as this script
+        # Plot choices using the same style as prisoner.R
         p <- ggplot(df, aes(x = Player, fill = Choice)) +
             geom_bar(position = "dodge") +
             theme_minimal() +
             labs(title = "Distribution of Choices", x = "Player", y = "Count") +
-            scale_fill_manual(values = c("C" = "#4CAF50", "D" = "#f44336")) +
+            scale_fill_manual(values = c("C" = "blue", "D" = "red")) +
             theme(
                 plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
                 axis.title = element_text(size = 12),
