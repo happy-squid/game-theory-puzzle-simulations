@@ -130,7 +130,7 @@ function(choices) {
             Choice = c(choices, computer_choices)
         )
         
-        # Plot choices
+        # Plot choices and save in the same directory as this script
         p <- ggplot(df, aes(x = Player, fill = Choice)) +
             geom_bar(position = "dodge") +
             theme_minimal() +
@@ -143,6 +143,9 @@ function(choices) {
                 legend.title = element_text(size = 12),
                 legend.text = element_text(size = 10)
             )
+        
+        # Save plot in the same directory as this script
+        ggsave("plot.png", p, width = 8, height = 6)
         
         print(p)
     }, error = function(e) {
