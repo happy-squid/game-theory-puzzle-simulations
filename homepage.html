@@ -2,63 +2,55 @@
 <html>
 <head>
     <title>Probability Simulations</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .simulation-button {
-            padding: 40px;
-            font-size: 1.2em;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-        .simulation-button:hover {
-            transform: scale(1.02);
-            background-color: #45a049;
-        }
-        .simulation-button.disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        .simulation-button.disabled:hover {
-            transform: none;
-            background-color: #cccccc;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
-    <h1>Probability Simulations</h1>
-    <div class="grid-container">
-        <button class="simulation-button" onclick="window.location.href='cointoss.html'">
-            Coin Toss Simulation
-        </button>
-        <button class="simulation-button" onclick="window.location.href='birthday.html'">
-            Birthday Paradox
-        </button>
-        <button class="simulation-button" onclick="window.location.href='montyhall/index.html'">
-            Monty Hall Problem
-        </button>
-        <button class="simulation-button disabled" disabled>
-            Coming Soon
-        </button>
+    <div class="header">
+        <h1 style="font-weight: 700;">PROBABILITY SIMULATIONS</h1>
+    </div>
+
+    <div class="container">
+        <div class="simulations-grid">
+            <a href="cointoss.html" class="simulation-card">
+                <div class="card-image">
+                    <img src="card_images/cointoss.jpg" alt="Coin Toss">
+                </div>
+                <div class="card-content">
+                    <h2>COIN TOSS</h2>
+                    <p>Explore the probability of getting exactly 50% heads in a series of coin tosses.</p>
+                </div>
+            </a>
+            <a href="birthday.html" class="simulation-card">
+                <div class="card-image">
+                    <img src="card_images/bday.jpg" alt="Birthday Paradox">
+                </div>
+                <div class="card-content">
+                    <h2>BIRTHDAY PARADOX</h2>
+                    <p>Discover the surprisingly high probability of shared birthdays in a group.</p>
+                </div>
+            </a>
+            <a href="prisoner.html" class="simulation-card">
+                <div class="card-image">
+                    <img src="card_images/prisoner.jpg" alt="Prisoner's Dilemma">
+                </div>
+                <div class="card-content">
+                    <h2>PRISONER'S DILEMMA</h2>
+                    <p>Experience the classic game theory scenario of cooperation versus defection.</p>
+                </div>
+            </a>
+            <a href="montyhall/index.html" class="simulation-card">
+                <div class="card-image">
+                    <img src="card_images/montyhall.jpg" alt="Monty Hall Problem">
+                </div>
+                <div class="card-content">
+                    <h2>MONTY HALL PROBLEM</h2>
+                    <p>Experience the classic probability puzzle of doors and prizes.</p>
+                </div>
+            </a>
+        </div>
     </div>
 </body>
-</html> 
+</html>

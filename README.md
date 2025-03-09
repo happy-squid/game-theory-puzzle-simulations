@@ -1,61 +1,107 @@
-# Coin Toss Simulation Web Interface
+# Game Theory and Probability Simulations
 
-A web interface for simulating coin tosses with statistical analysis and visualization.
+An interactive web application featuring classic probability puzzles and game theory simulations. Each simulation provides hands-on experience with mathematical concepts through engaging visualizations and real-time analysis.
 
-## Project Structure
-- `homepage.html` - The main landing page with simulation options
-- `cointoss.html` - The web interface for coin toss simulation
-- `birthday.html` - The web interface for birthday paradox simulation
-- `cointoss_api.R` - R API server for coin toss simulation
-- `birthday_api.R` - R API server for birthday paradox simulation
-- `cointoss.R` - Original coin toss simulation script
+## 🎲 Featured Simulations
 
-## Prerequisites
-- R installed on your system
-- Required R packages:
-  - plumber
-  - ggplot2
-  - jsonlite
+1. **COIN TOSS**
+   - Explore the probability of getting exactly 50% heads in multiple coin tosses
+   - Visualize deviations from expected outcomes
+   - Analyze probability distributions
 
-## Installation
+2. **BIRTHDAY PARADOX**
+   - Discover the surprisingly high probability of shared birthdays in a group
+   - Interactive simulation with adjustable group sizes
+   - Real-time probability calculations
 
-1. Clone this repository:
-bash
-git clone https://github.com/your-username/coin-toss-simulation.git
-cd coin-toss-simulation
+3. **PRISONER'S DILEMMA**
+   - Experience the classic game theory scenario
+   - Explore cooperation vs. defection strategies
+   - Analyze Nash equilibrium in practice
 
-2. Install required R packages:
-install.packages(c("plumber", "ggplot2", "jsonlite"))
+4. **MONTY HALL PROBLEM**
+   - Test the counter-intuitive solution to this famous probability puzzle
+   - Interactive door selection and reveals
+   - Track success rates with different strategies
 
-## Usage
+## 🚀 Getting Started
 
-1. Start the R servers:
+### Prerequisites
+- R (version 4.0 or higher)
+- Web browser (Chrome, Firefox, Safari)
+
+### Required R Packages
 ```R
-source("start_servers.R")
+install.packages(c("plumber", "ggplot2", "jsonlite"))
 ```
 
-2. Open `homepage.html` in your web browser
+### Installation & Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/game-theory-puzzle-simulations.git
+   cd game-theory-puzzle-simulations
+   ```
 
-## Features
+2. Start the R servers:
+   ```R
+   Rscript start_servers.R
+   ```
 
-- Input the number of coin tosses per simulation
-- Run 100 simulations for the given number of tosses
-- View detailed results including:
-  - Number of heads and tails for each simulation
-  - Deviation from expected values
-  - Probability of getting equal heads and tails
-- Visualize results with two interactive plots:
-  - Deviation from expected heads/tails count
-  - Probability distribution over different numbers of flips
+3. Open `homepage.html` in your web browser
 
-## Usage
+## 📁 Project Structure
 
-1. Enter the desired number of coin tosses in the input field
-2. Click "Run Simulation" or press Enter
-3. View the simulation results and graphs in the results section
+```
+.
+├── homepage.html          # Main landing page
+├── homepage.css          # Global styles
+├── card_images/          # Simulation card images
+├── start_servers.R       # Server startup script
+│
+├── cointoss/
+│   ├── cointoss.html    # Coin toss simulation interface
+│   └── cointoss_api.R   # Coin toss API endpoints
+│
+├── birthday/
+│   ├── birthday.html    # Birthday paradox interface
+│   └── birthday_api.R   # Birthday paradox API endpoints
+│
+├── prisoner/
+│   ├── prisoner.html    # Prisoner's dilemma interface
+│   └── prisoner_api.R   # Prisoner's dilemma API endpoints
+│
+└── montyhall/
+    ├── index.html       # Monty Hall problem interface
+    └── style.css        # Monty Hall specific styles
+```
 
-## API Endpoints
+## 🔧 API Endpoints
 
-- `/results` - Get statistical results for the simulation
-- `/toss` - Get the deviation plot
-- `/probability` - Get the probability distribution plot
+Each simulation runs on its own port:
+- Coin Toss: Port 8000
+- Birthday Paradox: Port 8001
+- Prisoner's Dilemma: Port 8003
+
+## 🎨 Features
+
+- Modern, responsive design
+- Interactive visualizations
+- Real-time statistical analysis
+- Intuitive user interface
+- Cross-browser compatibility
+
+## 📚 Educational Value
+
+Each simulation is designed to provide:
+- Hands-on experience with probability concepts
+- Visual understanding of statistical principles
+- Practical application of game theory
+- Interactive learning environment
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

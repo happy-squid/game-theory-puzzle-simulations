@@ -1,0 +1,320 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #333;
+    font-weight: 600;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+.home-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 15px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.home-button:hover {
+    background-color: #555;
+}
+
+.section {
+    padding-top: 100px;  
+    min-height: calc(100vh - 100px);  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.input-section {
+    background-color: #f8f9fa;
+}
+
+.input-container {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    padding: 40px 20px;
+    margin: 0 auto;
+}
+
+.large-input {
+    font-size: 3em;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin: 30px auto;
+    border: 3px solid #4CAF50;
+    border-radius: 12px;
+    display: block;
+}
+
+input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.run-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.run-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.results-section {
+    background-color: white;
+}
+
+.results-content {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.results-table th, .results-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.results-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.graph-section {
+    background-color: #f8f9fa;
+}
+
+.graph-container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin: 40px auto 60px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.graph-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px;
+    background: white;
+}
+
+.scroll-arrow {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.scroll-arrow:hover {
+    transform: translateX(-50%) translateY(5px);
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.visible {
+    display: block;
+    opacity: 1;
+}
+
+.section-title {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+h2.section-title {
+    font-size: 2em;
+    margin-top: 20px;
+}
+
+.results-text {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin: 20px 0 40px 0;
+    text-align: center;
+}
+
+.conclusion-text {
+    font-size: 1.6em;
+    line-height: 1.8;
+    margin: 40px 0;
+    text-align: center;
+    color: #333;
+}
+
+.distribution-table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    font-size: 1.2em;
+}
+
+.distribution-table th,
+.distribution-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.distribution-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.table-caption {
+    font-size: 1.2em;
+    color: #666;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.go-top-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.go-top-button:hover {
+    background-color: #555;
+}
+
+.scroll-to-top {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.scroll-to-top:hover {
+    background-color: #555;
+}
+
+.deviation-section {
+    margin-top: 20px;
+}
+
+#deviation-results {
+    margin-bottom: 60px;
+}
+
+#simulation-results,
+#deviation-results {
+    margin-bottom: 60px;
+}
+
+.simulation-section .results-text,
+.deviation-section .results-text {
+    margin-bottom: 60px;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .section {
+        padding: 20px 10px;
+    }
+    
+    .large-input {
+        width: 80%;
+        font-size: 2em;
+    }
+    
+    .section-title {
+        font-size: 2em;
+    }
+    
+    .results-text {
+        font-size: 1.2em;
+    }
+}

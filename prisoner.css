@@ -1,0 +1,436 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #333;
+    font-weight: 600;
+}
+
+.home-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 15px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.home-button:hover {
+    background-color: #555;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.section {
+    padding-top: 100px;  /* Added to account for fixed header */
+    min-height: calc(100vh - 100px);  /* Adjusted for header */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.section-title {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+.content {
+    max-width: 800px;
+    width: 100%;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.content h3 {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+}
+
+.content p {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.scroll-arrow {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.go-top-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    display: block;
+}
+
+.go-top-button:hover {
+    background-color: #555;
+}
+
+.payoff-table {
+    width: 80%;
+    max-width: 500px;
+    border-collapse: collapse;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payoff-table th, .payoff-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.payoff-table th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.payoff-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.choice-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.choice-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.choice-button:hover {
+    background-color: #1976D2;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.choice-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.choice-button.selected {
+    background-color: #1565C0;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.choice-button.selected::after {
+    content: '✓';
+    position: absolute;
+    right: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.choice-button.cooperate {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.choice-button.defect {
+    background-color: #f44336;
+    color: white;
+}
+
+.choice-button:hover {
+    transform: scale(1.05);
+}
+
+.choice-button.selected {
+    transform: scale(0.95);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.run-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 20px auto;
+    display: block;
+}
+
+.run-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.run-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.run-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.error-message {
+    color: #f44336;
+    text-align: center;
+    margin: 10px 0;
+    display: none;
+}
+
+#leaderboard {
+    margin-top: 30px;
+    overflow-x: auto;
+}
+
+#game-history {
+    width: 80%;
+    max-width: 600px;
+    border-collapse: collapse;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#game-history th, #game-history td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+#game-history th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+#game-history tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.plot-container {
+    width: 100%;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.plot-container h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#distribution-plot {
+    max-width: 80%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.action-button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    min-width: 150px;
+}
+
+.action-button:hover {
+    background-color: #1976D2;
+    transform: scale(1.05);
+}
+
+.action-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#show-multiple-results {
+    margin: 20px auto;
+    display: block;
+}
+
+#restart-game {
+    margin: 10px auto;
+    display: block;
+}
+
+#rounds-status {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.strategy-explanation {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.strategy-explanation h3 {
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.strategy-explanation p {
+    text-align: center;
+    margin: 15px 0;
+    line-height: 1.5;
+}
+
+#total-scores {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#total-scores p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.scroll-to-top {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.scroll-to-top:hover {
+    background-color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.5em;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .choice-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .choice-button {
+        width: 100%;
+    }
+
+    .payoff-table th, .payoff-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}

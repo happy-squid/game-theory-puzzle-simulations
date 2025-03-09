@@ -2,161 +2,267 @@
 <html>
 <head>
     <title>Coin Toss Simulation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .container {
-            text-align: center;
-        }
-        input[type="number"] {
-            padding: 5px;
-            margin: 10px;
-        }
-        button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #result {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .results-section {
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: left;
-            width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        .results-table th, .results-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        .results-table th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .home-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 8px 15px;
-            background-color: #666;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .home-button:hover {
-            background-color: #555;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cointoss.css">
 </head>
 <body>
-    <button class="home-button" onclick="window.location.href='homepage.html'">← Home</button>
-    <div class="container">
-        <h1>Coin Toss Simulation</h1>
-        <div>
-            <label for="tosses">Number of Coin Tosses per Simulation:</label>
-            <input type="number" id="tosses" min="1" value="100" onkeypress="handleKeyPress(event)">
-            <button onclick="runSimulation()">Run Simulation</button>
-        </div>
-        <div id="result">
-            <div id="results-section" class="results-section" style="display: none;">
-                <h2>Simulation Results</h2>
-                <div id="results-content"></div>
-            </div>
-            <img id="plot1" style="display: none;">
-            <img id="plot2" style="display: none;">
-        </div>
+    <div class="header">
+        <button class="home-button" onclick="window.location.href='homepage.html'">← Home</button>
+        <h1 style="font-weight: 700;">COIN TOSS</h1>
     </div>
 
+    <!-- Input Section -->
+    <section id="input-section" class="section input-section">
+        <div class="input-container">
+            <h1 class="section-title">How many times would you toss a coin if you had to maximise your chances of getting exactly 50% heads?</h1>
+            <input type="number" id="tosses" class="large-input" min="1" value="10" placeholder="Number of tosses">
+            <button onclick="runSimulation()" class="run-button">Run Simulation</button>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('results-section')">↓</button>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results-section" class="section results-section hidden">
+        <div class="results-content">
+            <h2 class="section-title">Initial Probability</h2>
+            <div id="initial-results" class="results-text"></div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('simulation-section')">↓</button>
+    </section>
+
+    <!-- Simulation Results Section -->
+    <section id="simulation-section" class="section simulation-section hidden">
+        <div class="results-content">
+            <h2 class="section-title">Simulation Results</h2>
+            <div id="simulation-results" class="results-text"></div>
+            <div id="heads-distribution"></div>
+            <div id="tails-distribution"></div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('proportion-section')">↓</button>
+    </section>
+
+    <!-- Proportion Section -->
+    <section id="proportion-section" class="section proportion-section hidden">
+        <div class="results-content">
+            <h2 class="section-title">Proportions</h2>
+            <div id="proportion-results" class="results-text"></div>
+            <div id="heads-proportion"></div>
+            <div id="tails-proportion"></div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('deviation-section')">↓</button>
+    </section>
+
+    <!-- Deviation Section -->
+    <section id="deviation-section" class="section deviation-section hidden">
+        <div class="results-content">
+            <h2 class="section-title">Deviations</h2>
+            <div id="deviation-results" class="results-text"></div>
+            <div id="deviation-table"></div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('conclusion-section')">↓</button>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section id="conclusion-section" class="section conclusion-section hidden">
+        <div class="results-content">
+            <h2 class="section-title">Conclusion</h2>
+            <div id="conclusion-text" class="results-text"></div>
+            <div id="simulation-summary"></div>
+            <div class="graph-container">
+                <img id="plot2" style="max-width: 100%; margin: 20px 0;">
+            </div>
+            <button class="go-top-button" style="margin-top: 20px;" onclick="scrollToSection('input-section')">Go to Top</button>
+        </div>
+    </section>
+
     <script>
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                runSimulation();
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showAllSections() {
+            const sections = ['results-section', 'simulation-section', 'proportion-section', 'deviation-section', 'conclusion-section'];
+            sections.forEach(section => {
+                const elem = document.getElementById(section);
+                elem.style.display = 'flex';
+                elem.classList.remove('hidden');
+                elem.classList.add('visible');
+            });
+        }
+
+        function showConclusionSection() {
+            const conclusionSection = document.getElementById('conclusion-section');
+            conclusionSection.style.display = 'flex';
+            conclusionSection.classList.remove('hidden');
+            conclusionSection.classList.add('visible');
+            setTimeout(() => {
+                scrollToSection('conclusion-section');
+            }, 100);
+        }
+
+        function validateInput(tosses) {
+            if (tosses <= 0) {
+                alert("Please enter a valid positive number.");
+                return false;
             }
+            return true;
         }
 
         async function runSimulation() {
-            const tosses = document.getElementById('tosses').value;
-            const plot1 = document.getElementById('plot1');
-            const plot2 = document.getElementById('plot2');
-            const resultsSection = document.getElementById('results-section');
-            const resultsContent = document.getElementById('results-content');
+            const tosses = parseInt(document.getElementById('tosses').value);
+            
+            if (!validateInput(tosses)) return;
             
             try {
-                // Get results data
+                // Reset any previous state
+                document.getElementById('conclusion-section').classList.add('hidden');
+                document.getElementById('conclusion-section').style.display = 'none';
+
                 const resultsResponse = await fetch(`http://localhost:8000/results?n=${tosses}`);
                 const results = await resultsResponse.json();
                 
-                // Display results
-                resultsContent.innerHTML = `
-                    <p><strong>Number of Simulations:</strong> 100</p>
-                    <p><strong>Tosses per Simulation:</strong> ${tosses}</p>
-                    <p><strong>Equal Heads/Tails Probability:</strong> ${results.equalProbability}%</p>
-                    <table class="results-table">
-                        <tr>
-                            <th>Simulation</th>
-                            <th>Heads</th>
-                            <th>Tails</th>
-                            <th>Heads Deviation</th>
-                            <th>Tails Deviation</th>
-                        </tr>
-                        ${results.simulations.slice(0, 5).map(sim => `
-                            <tr>
-                                <td>${sim.simulation}</td>
-                                <td>${sim.heads}</td>
-                                <td>${sim.tails}</td>
-                                <td>${sim.headsDeviation}</td>
-                                <td>${sim.tailsDeviation}</td>
-                            </tr>
-                        `).join('')}
-                    </table>
-                    <p><em>Showing first 5 simulations...</em></p>
-                    <div style="text-align: center; margin: 20px 0;">
-                        <img id="plot1" style="max-width: 100%; margin-bottom: 20px;">
-                        <img id="plot2" style="max-width: 100%; margin-bottom: 20px;">
-                    </div>
-                `;
-                resultsSection.style.display = 'block';
-
-                // Get and display plots
-                const response = await fetch(`http://localhost:8000/toss?n=${tosses}`);
-                const blob = await response.blob();
-                const imageUrl = URL.createObjectURL(blob);
-                document.getElementById('plot1').src = imageUrl;
-                
+                // Get probability plot early to avoid timing issues
                 const response2 = await fetch(`http://localhost:8000/probability?n=${tosses}`);
                 const blob2 = await response2.blob();
-                const imageUrl2 = URL.createObjectURL(blob2);
-                document.getElementById('plot2').src = imageUrl2;
+                const plotUrl = URL.createObjectURL(blob2);
+                
+                // Initial probability results
+                const possibilities = Math.pow(2, tosses);
+                const probEqual = parseFloat(results.equalProbability);
+                
+                document.getElementById('initial-results').innerHTML = `
+                    <p>You may or may not get equal heads & tails on flipping a coin ${tosses} times.</p>
+                    <p>Among the ${possibilities} possibilities you have,</p>
+                    <p>the probability of getting equal heads & tails for ${tosses} tosses is: ${probEqual.toFixed(4)}%</p>
+                    <p>Now we can actually simulate this experiment of ${tosses} coin tosses, 100 times to observe the probability in action.</p>
+                `;
+
+                // Simulation results with distribution tables
+                document.getElementById('simulation-results').innerHTML = `
+                    <p>Running 100 simulations of ${tosses} coin flips each...</p>
+                `;
+                
+                // Create heads distribution table
+                document.getElementById('heads-distribution').innerHTML = `
+                    <h3>Frequency Distribution of Heads Count Across Simulations:</h3>
+                    ${createDistributionTable(results.headsDistribution)}
+                    <p class="table-caption">First row shows how many heads out of ${tosses} we got in the simulation.</p>
+                    <p class="table-caption">Second row shows how many simulations out of 100 we got that result in.</p>
+                `;
+
+                // Create tails distribution table
+                document.getElementById('tails-distribution').innerHTML = `
+                    <h3>Frequency Distribution of Tails Count Across Simulations:</h3>
+                    ${createDistributionTable(results.tailsDistribution)}
+                    <p class="table-caption">Same for tails.</p>
+                `;
+
+                // Proportion results
+                document.getElementById('proportion-results').innerHTML = `
+                    <p>Thus got these many heads & tails in each simulation of ${tosses} coin tosses.</p>
+                    <p>Here are the proportions for the same:</p>
+                `;
+
+                // Create proportion tables
+                document.getElementById('heads-proportion').innerHTML = `
+                    <h3>Proportion of Heads Count Across Simulations:</h3>
+                    ${createDistributionTable(results.headsProportions)}
+                `;
+
+                document.getElementById('tails-proportion').innerHTML = `
+                    <h3>Proportion of Tails Count Across Simulations:</h3>
+                    ${createDistributionTable(results.tailsProportions)}
+                `;
+
+                // Deviation results
+                document.getElementById('deviation-results').innerHTML = `
+                    <p>Hence, for ${tosses} tosses, the probability of equal H&T is ${probEqual.toFixed(2)}%, 
+                    as you can approximately see in proportion given under ${tosses/2} heads/tails.</p>
+                    <p>Now we calculate deviations from required values.</p>
+                    <p>Which means, we subtract the required amount of heads/tails from their actual number.</p>
+                    <h3>How often did heads & tails deviate by certain amounts?</h3>
+                `;
+
+                document.getElementById('deviation-table').innerHTML = `
+                    ${createDistributionTable(results.deviationTable)}
+                    <p class="table-caption">You can see that the approx. proportion for ${probEqual.toFixed(2)}% is given under 0 deviation.</p>
+                `;
+                
+                // Conclusion section
+                document.getElementById('conclusion-text').innerHTML = `
+                    <h3>Deviation from Expected Heads/Tails Count</h3>
+                `;
+
+                document.getElementById('simulation-summary').innerHTML = `
+                    <h3>Summary of few Simulations:</h3>
+                    ${createSummaryTable(results.simulations.slice(0, 5))}
+                    <div class="conclusion-text">
+                        <p>The probability of getting heads or tails converges to 50/50 as you increase number of tosses...</p>
+                        <p>...but probability of getting exactly 50% heads or tails reduces significantly.</p>
+                        <p>The max probability is obtained when number of tosses is 2. You have a 50% chance. See graph below.</p>
+                    </div>
+                `;
+                
+                // Set the plot URL
+                const plotImg = document.getElementById('plot2');
+                plotImg.src = plotUrl;
+                
+                // Show sections 1-4
+                showAllSections();
+                
+                // Setup the deviation section arrow click handler
+                const deviationArrow = document.querySelector('#deviation-section .scroll-arrow');
+                deviationArrow.onclick = showConclusionSection;
+
+                // Scroll to first results section
+                scrollToSection('results-section');
+                
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error running simulation. Please try again.');
             }
         }
+
+        function createDistributionTable(data) {
+            return `
+                <table class="distribution-table">
+                    <tr>${Object.keys(data).map(key => `<th>${key}</th>`).join('')}</tr>
+                    <tr>${Object.values(data).map(value => `<td>${value}</td>`).join('')}</tr>
+                </table>
+            `;
+        }
+
+        function createSummaryTable(simulations) {
+            return `
+                <table class="distribution-table">
+                    <tr>
+                        <th>Simulation</th>
+                        <th>Heads</th>
+                        <th>Tails</th>
+                        <th>Heads Deviation</th>
+                        <th>Tails Deviation</th>
+                    </tr>
+                    ${simulations.map((sim, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${sim.heads}</td>
+                            <td>${sim.tails}</td>
+                            <td>${sim.headsDeviation}</td>
+                            <td>${sim.tailsDeviation}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
+        }
+
+        // Handle Enter key
+        document.getElementById('tosses').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                runSimulation();
+            }
+        });
     </script>
 </body>
-</html> 
+</html>

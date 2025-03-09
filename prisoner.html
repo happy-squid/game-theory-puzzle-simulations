@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prisoner's Dilemma</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="prisoner.css">
+</head>
+<body>
+    <div class="header">
+        <button class="home-button" onclick="window.location.href='homepage.html'">← Home</button>
+        <h1 style="font-weight: 700;">PRISONER'S DILEMMA</h1>
+    </div>
+
+    <!-- Section 1: Explanation -->
+    <section id="explanation-section" class="section">
+        <h2 class="section-title">Explanation</h2>
+        <div class="content">
+            <div class="explanation">
+                <p>In the Prisoner's Dilemma, two players must choose to either cooperate (C) or defect (D). 
+                The payoffs for each combination of choices are shown in the table below:</p>
+                <table class="payoff-table">
+                    <tr>
+                        <th></th>
+                        <th>Computer Cooperates</th>
+                        <th>Computer Defects</th>
+                    </tr>
+                    <tr>
+                        <td>You Cooperate</td>
+                        <td>(3, 3)</td>
+                        <td>(0, 5)</td>
+                    </tr>
+                    <tr>
+                        <td>You Defect</td>
+                        <td>(5, 0)</td>
+                        <td>(1, 1)</td>
+                    </tr>
+                </table>
+                <p>Each cell shows (Your Score, Computer's Score)</p>
+            </div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('single-round-section')">↓</button>
+    </section>
+
+    <!-- Section 2: Single Round Input -->
+    <section id="single-round-section" class="section">
+        <h2 class="section-title">Single Round</h2>
+        <div class="content">
+            <p>Make your choice for a single round:</p>
+            <div class="choice-buttons">
+                <button onclick="selectChoice('C')" class="choice-button cooperate">Cooperate (C)</button>
+                <button onclick="selectChoice('D')" class="choice-button defect">Defect (D)</button>
+            </div>
+            <button id="show-results" onclick="playSingleRound()" class="run-button" disabled>Show Results</button>
+            <div id="single-round-error" class="error-message"></div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('results-section')">↓</button>
+    </section>
+
+    <!-- Section 3: Single Round Results -->
+    <section id="results-section" class="section">
+        <h2 class="section-title">Results</h2>
+        <div class="content">
+            <div id="single-round-results"></div>
+            <div class="strategy-explanation">
+                <h3>Single Round Strategy:</h3>
+                <p>In a single round, defecting (D) always results in at least as much reward as cooperating. 
+                This makes defection the dominant strategy for one-shot games.</p>
+            </div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('multiple-rounds-section')">↓</button>
+    </section>
+
+    <!-- Section 4: Multiple Rounds -->
+    <section id="multiple-rounds-section" class="section">
+        <h2 class="section-title">Multiple Rounds</h2>
+        <div class="content">
+            <div id="rounds-status">Round 1 of 5</div>
+            <div id="multiple-rounds-error" class="error-message"></div>
+            <div id="choice-buttons-container" class="choice-buttons">
+                <button class="choice-button cooperate" onclick="handleMultipleRoundChoice('C')">Cooperate (C)</button>
+                <button class="choice-button defect" onclick="handleMultipleRoundChoice('D')">Defect (D)</button>
+            </div>
+            <button id="show-multiple-results" class="action-button" onclick="showMultipleResults()" disabled>Show Results</button>
+            <button id="restart-game" class="action-button" onclick="restartGame()">Restart Game</button>
+            <div id="leaderboard">
+                <table id="game-history">
+                    <tr>
+                        <th>Round</th>
+                        <th>Your Choice</th>
+                        <th>Computer's Choice</th>
+                        <th>Your Score</th>
+                        <th>Computer's Score</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <button class="scroll-arrow" onclick="scrollToSection('final-results-section')">↓</button>
+    </section>
+
+    <!-- Section 5: Final Results -->
+    <section id="final-results-section" class="section">
+        <h2 class="section-title">Final Results</h2>
+        <div class="content">
+            <div id="total-scores">
+                <h3>Total Scores:</h3>
+                <p>Your total score: <span id="player-total">0</span></p>
+                <p>Computer's total score: <span id="computer-total">0</span></p>
+            </div>
+            <div class="plot-container">
+                <h3>Distribution of Choices Graph</h3>
+                <img id="distribution-plot" alt="Distribution of choices" style="display: none;">
+            </div>
+            <div class="strategy-explanation">
+                <h3>Finite Game Strategy:</h3>
+                <p>In a game with a known number of rounds, players often defect in the final rounds due to 'backward induction' - knowing the game will end leads to earlier defection.</p>
+                <h3>Infinite Game Strategy:</h3>
+                <p>In infinite or unknown-length games, cooperation can emerge as the optimal strategy. Strategies like 'Tit-for-Tat' (copying the opponent's last move) can build mutual trust.</p>
+            </div>
+            <div class="button-container">
+                <button class="action-button" onclick="restartGame()">Play Again</button>
+                <br>
+                <button class="go-top-button" onclick="scrollToSection('explanation-section')">Go to Top</button>
+            </div>
+            <div id="plot-error" class="error-message"></div>
+        </div>
+    </section>
+
+    <script>
+        let currentRound = 1;
+        let playerTotal = 0;
+        let computerTotal = 0;
+        let multipleRoundChoices = [];
+        let gameCompleted = false;
+        let currentChoice;
+
+        async function handleMultipleRoundChoice(choice) {
+            if (gameCompleted) {
+                document.getElementById('rounds-status').textContent = '5 Rounds Completed';
+                return;
+            }
+
+            if (currentRound > 5) {
+                gameCompleted = true;
+                document.getElementById('rounds-status').textContent = '5 Rounds Completed';
+                document.getElementById('choice-buttons-container').style.display = 'none';
+                return;
+            }
+
+            try {
+                document.getElementById('rounds-status').textContent = `Round ${currentRound} of 5`;
+                const response = await fetch(`http://localhost:8003/single_round?choice=${choice}`);
+                
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error('Failed to parse server response');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to play round');
+                }
+
+                multipleRoundChoices.push(choice);
+
+                const table = document.getElementById('game-history');
+                const row = table.insertRow(-1);
+                row.innerHTML = `
+                    <td>${currentRound}</td>
+                    <td>${data.playerChoice === 'C' ? 'Cooperate' : 'Defect'}</td>
+                    <td>${data.computerChoice === 'C' ? 'Cooperate' : 'Defect'}</td>
+                    <td>${data.playerScore}</td>
+                    <td>${data.computerScore}</td>
+                `;
+
+                playerTotal += data.playerScore;
+                computerTotal += data.computerScore;
+
+                document.getElementById('player-total').textContent = playerTotal;
+                document.getElementById('computer-total').textContent = computerTotal;
+
+                currentRound++;
+
+                if (currentRound > 5) {
+                    gameCompleted = true;
+                    document.getElementById('rounds-status').textContent = '5 Rounds Completed';
+                    document.getElementById('choice-buttons-container').style.display = 'none';
+                    document.getElementById('show-multiple-results').disabled = false;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('multiple-rounds-error').textContent = error.message;
+                document.getElementById('multiple-rounds-error').style.display = 'block';
+            }
+        }
+
+        async function showMultipleResults() {
+            try {
+                await updateDistributionPlot();
+                scrollToSection('final-results-section');
+                document.getElementById('show-multiple-results').disabled = true;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('multiple-rounds-error').textContent = error.message;
+                document.getElementById('multiple-rounds-error').style.display = 'block';
+            }
+        }
+
+        async function updateDistributionPlot() {
+            try {
+                const plotResponse = await fetch(`http://localhost:8003/choice_distribution_plot?choices=${multipleRoundChoices.join(',')}`);
+                
+                if (!plotResponse.ok) {
+                    const errorData = await plotResponse.text();
+                    throw new Error(errorData || 'Failed to generate plot');
+                }
+                
+                const blob = await plotResponse.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                const plotImage = document.getElementById('distribution-plot');
+                plotImage.src = imageUrl;
+                plotImage.style.display = 'block';
+            } catch (error) {
+                console.error('Plot Error:', error);
+                document.getElementById('plot-error').textContent = error.message;
+                document.getElementById('plot-error').style.display = 'block';
+            }
+        }
+
+        async function playSingleRound() {
+            if (!currentChoice) return;
+
+            try {
+                document.getElementById('single-round-results').innerHTML = 'Loading...';
+                const response = await fetch(`http://localhost:8003/single_round?choice=${currentChoice}`);
+                
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error('Failed to parse server response');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to play round');
+                }
+
+                document.getElementById('single-round-results').innerHTML = `
+                    <h3>Round Results:</h3>
+                    <p>Your choice: ${data.playerChoice === 'C' ? 'Cooperate' : 'Defect'}</p>
+                    <p>Computer's choice: ${data.computerChoice === 'C' ? 'Cooperate' : 'Defect'}</p>
+                    <p>Your score: ${data.playerScore}</p>
+                    <p>Computer's score: ${data.computerScore}</p>
+                `;
+
+                // Reset selection
+                currentChoice = null;
+                document.querySelectorAll('.choice-button').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                document.getElementById('show-results').disabled = true;
+
+                scrollToSection('results-section');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('single-round-error').textContent = error.message;
+                document.getElementById('single-round-error').style.display = 'block';
+                document.getElementById('single-round-results').innerHTML = '';
+            }
+        }
+
+        async function handleSingleRoundChoice(choice) {
+            // Remove selected class from all buttons
+            document.querySelectorAll('.choice-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked button
+            const clickedButton = document.querySelector(`.choice-button.${choice.toLowerCase()}`);
+            clickedButton.classList.add('selected');
+
+            try {
+                const response = await fetch(`http://localhost:8003/single_round?choice=${choice}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const result = await response.json();
+
+                // Update results
+                document.getElementById('single-round-results').innerHTML = `
+                    <h3>Round Results:</h3>
+                    <p>Your choice: ${choice}</p>
+                    <p>Computer's choice: ${result.computerChoice}</p>
+                    <p>Your score: ${result.playerScore}</p>
+                    <p>Computer's score: ${result.computerScore}</p>
+                `;
+
+                // Show play again button
+                document.getElementById('show-results').disabled = false;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('single-round-error').textContent = error.message;
+                document.getElementById('single-round-error').style.display = 'block';
+                document.getElementById('single-round-results').innerHTML = '';
+            }
+        }
+
+        function restartGame() {
+            currentRound = 1;
+            playerTotal = 0;
+            computerTotal = 0;
+            multipleRoundChoices = [];
+            gameCompleted = false;
+
+            document.getElementById('rounds-status').textContent = 'Round 1 of 5';
+            document.getElementById('choice-buttons-container').style.display = 'flex';
+            
+            document.getElementById('game-history').innerHTML = `
+                <tr>
+                    <th>Round</th>
+                    <th>Your Choice</th>
+                    <th>Computer's Choice</th>
+                    <th>Your Score</th>
+                    <th>Computer's Score</th>
+                </tr>
+            `;
+
+            document.getElementById('player-total').textContent = '0';
+            document.getElementById('computer-total').textContent = '0';
+            document.getElementById('distribution-plot').style.display = 'none';
+            document.getElementById('multiple-rounds-error').style.display = 'none';
+
+            scrollToSection('multiple-rounds-section');
+        }
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectChoice(choice) {
+            currentChoice = choice;
+            document.querySelectorAll('.choice-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            document.getElementById('show-results').disabled = false;
+        }
+    </script>
+</body>
+</html>

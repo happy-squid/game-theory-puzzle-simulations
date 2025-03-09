@@ -1,3 +1,7 @@
+dbinom <- function(x, n, p) {
+    choose(n, x) * p^x * (1-p)^(n-x)
+}
+
 library(plumber)
 library(ggplot2)
 library(jsonlite)
@@ -33,7 +37,18 @@ function(n) {
     tails_deviation <- expected_value - tails_count
     
     # Calculate probability of equal heads/tails
-    prob_equal <- dbinom(n/2, n, 0.5) * 100
+    prob_equal <- if(n %% 2 == 0) dbinom(n/2, n, 0.5) * 100 else 0
+    
+    # Create frequency distributions
+    heads_dist <- as.list(table(heads_count))
+    tails_dist <- as.list(table(tails_count))
+    
+    # Create proportions
+    heads_prop <- as.list(prop.table(table(heads_count)))
+    tails_prop <- as.list(prop.table(table(tails_count)))
+    
+    # Create deviation table
+    deviation_table <- as.list(table(abs(heads_deviation - tails_deviation)))
     
     # Create results data
     simulations <- data.frame(
@@ -44,14 +59,15 @@ function(n) {
         tailsDeviation = tails_deviation
     )
     
-    # Calculate frequency distributions
-    heads_dist <- prop.table(table(heads_count))
-    tails_dist <- prop.table(table(tails_count))
-    
     # Return JSON response
     list(
-        equalProbability = round(prob_equal, 2),
-        simulations = simulations
+        equalProbability = round(prob_equal, 4),
+        simulations = simulations,
+        headsDistribution = heads_dist,
+        tailsDistribution = tails_dist,
+        headsProportions = heads_prop,
+        tailsProportions = tails_prop,
+        deviationTable = deviation_table
     )
 }
 
@@ -66,14 +82,12 @@ function(n) {
         stop("Invalid number of tosses")
     }
     
-    # Set seed for reproducibility
     set.seed(42)
-    
     s <- 100  # Number of simulations
-    expected_value <- n / 2  # Expected heads & tails
+    expected_value <- n / 2
     
     # Simulate tosses
-    heads_count <- rbinom(s, n, 0.5)  # Simulate 's' times
+    heads_count <- rbinom(s, n, 0.5)
     tails_count <- n - heads_count
     
     # Compute deviations
@@ -117,18 +131,32 @@ function(n) {
     }
     
     # Plot probability of 50% heads over different tosses
-    n_values <- seq(2, 10000, by = 100)
-    p_values <- dbinom(n_values / 2, n_values, 0.5)
+    # Start from 2 (as we need even numbers) and use smaller steps for better resolution
+    n_values <- seq(2, 1000, by = 2)  # Only using even numbers up to 1000 for better visibility
+    
+    # Calculate probability for each n
+    # For each n, we want exactly n/2 heads (50%)
+    p_values <- sapply(n_values, function(n) dbinom(n/2, n, 0.5))
     
     df_prob <- data.frame(
         Flips = n_values,
-        Probability = p_values * 100
+        Probability = p_values * 100  # Convert to percentage
     )
     
     p <- ggplot(df_prob, aes(x = Flips, y = Probability)) +
         geom_line(color = "red", size = 1) +
-        scale_y_log10() +
+        scale_y_log10(
+            breaks = c(0.001, 0.01, 0.1, 1, 10, 50),
+            labels = function(x) sprintf("%.3f%%", x)
+        ) +
+        scale_x_continuous(breaks = seq(0, 1000, by = 200)) +
         theme_minimal() +
+        theme(
+            axis.text = element_text(size = 12),
+            axis.title = element_text(size = 14),
+            plot.title = element_text(size = 13, face = "bold"),
+            plot.margin = margin(t = 20, r = 20, b = 20, l = 20, unit = "pt")
+        ) +
         labs(
             title = "Probability of Getting Exactly 50% Heads vs. Number of Flips",
             x = "Number of Coin Flips",
@@ -136,4 +164,4 @@ function(n) {
         )
     
     print(p)
-} 
+}
