@@ -2,6 +2,8 @@
 
 An interactive web application featuring classic probability puzzles and game theory simulations. Each simulation provides hands-on experience with mathematical concepts through engaging visualizations and real-time analysis.
 
+Contributors - Hardik Monga, Varad Akolkar, Venkat Chilukuri
+
 ## 🎲 Featured Simulations
 
 1. **COIN TOSS**
