@@ -171,8 +171,12 @@ function(choices, strategy = "random") {
                 legend.text = element_text(size = 10)
             )
         
-        # Save plot in the same directory as this script
-        ggsave("plot.png", p, width = 8, height = 6)
+        # Get the directory of this script
+        script_dir <- dirname(sys.frame(1)$ofile)
+        plot_path <- file.path(script_dir, "plot.png")
+        
+        # Save plot in the prisoner directory
+        ggsave(plot_path, p, width = 8, height = 6)
         
         print(p)
     }, error = function(e) {

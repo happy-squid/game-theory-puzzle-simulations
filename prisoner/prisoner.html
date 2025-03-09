@@ -125,7 +125,8 @@
             </div>
             <div class="plot-container">
                 <h3>Distribution of Choices Graph</h3>
-                <img id="distribution-plot" alt="Distribution of choices" style="display: none;">
+                <img id="distribution-plot" src="" alt="Distribution of choices" style="display: none;">
+                <div id="plot-error" class="error-message"></div>
             </div>
             <div class="strategy-explanation">
                 <h3>Finite Game Strategy:</h3>
@@ -138,7 +139,6 @@
                 <br>
                 <button class="go-top-button" onclick="scrollToSection('explanation-section')">Go to Top</button>
             </div>
-            <div id="plot-error" class="error-message"></div>
         </div>
     </section>
 
@@ -216,15 +216,19 @@
         async function showMultipleResults() {
             try {
                 const strategy = document.querySelector('input[name="strategy"]:checked').value;
-                // Update distribution plot
+                
+                // First, trigger plot generation
                 const plotResponse = await fetch(`http://localhost:8003/choice_distribution_plot?choices=${multipleRoundChoices.join(',')}&strategy=${strategy}`);
                 if (!plotResponse.ok) {
                     throw new Error('Failed to generate plot');
                 }
+                
+                // Wait a bit for the file to be saved
+                await new Promise(resolve => setTimeout(resolve, 500));
 
                 // Get the plot image and display it
                 const plotImg = document.getElementById('distribution-plot');
-                plotImg.src = `plot.png?t=${new Date().getTime()}`; // Add timestamp to prevent caching
+                plotImg.src = `./plot.png?t=${new Date().getTime()}`; // Add timestamp to prevent caching
                 plotImg.style.display = 'block';
 
                 // Scroll to final results section
