@@ -81,12 +81,23 @@ function(choices) {
         }
         
         rounds <- length(choices)
-        computer_choices <- sample(c("C", "D"), rounds, replace = TRUE)
+        computer_choices <- character(rounds)
         
         player_scores <- numeric(rounds)
         computer_scores <- numeric(rounds)
         
+        # Play each round and store computer's choices
         for (i in 1:rounds) {
+            # Get computer's choice from the single round
+            single_round <- tryCatch({
+                single_round_result <- get("/single_round", query = list(choice = choices[i]))
+                fromJSON(single_round_result)
+            }, error = function(e) {
+                # If there's an error getting the single round result, generate a random choice
+                list(computerChoice = sample(c("C", "D"), 1)[[1]])
+            })
+            
+            computer_choices[i] <- single_round$computerChoice
             result <- payoffs[[choices[i]]][[computer_choices[i]]]
             player_scores[i] <- result[1]
             computer_scores[i] <- result[2]
